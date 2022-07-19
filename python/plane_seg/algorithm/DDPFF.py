@@ -2,6 +2,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from . import IAlgorithm
+from . import Config
 
 import subprocess
 import os
@@ -20,6 +21,26 @@ class DDPFF(IAlgorithm.IAlgorithm):
         self.__alg_input_dir = Path("ddpff_input")
         self.__alg_output_dir = Path("ddpff_output")
         self.__alg_artifact_name = Path("planes.txt")
+        self.__parameter_list = (
+            "debugLevel",
+            "bufferSize",
+            "floodFill.pointThreshold_min",
+            "floodFill.pointThreshold_max",
+            "floodFill.planeThreshold_flood",
+            "floodFill.planeThreshold_merge",
+            "floodFill.planeThreshold_flood_max",
+            "floodFill.planeThreshold_merge_max",
+            "floodFill.angleThresholdFloodFill",
+            "floodFill.angleThresholdFloodFill_max",
+            "floodFill.minPlaneSize",
+            "floodFill.normalSampleDistance_min",
+            "floodFill.normalSampleDistance_max",
+            "floodFill.c_plane",
+            "floodFill.c_plane_merge",
+            "floodFill.c_point",
+            "floodFill.c_angle",
+            "floodFill.c_range",
+        )
 
     def run(self) -> np.ndarray:
         if os.path.exists(self.__alg_output_dir):

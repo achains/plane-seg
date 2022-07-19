@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Union
 
 import configparser
 
@@ -33,6 +33,11 @@ class Config:
             )
 
         return cfg
+
+    def change_value(self, param_name: str, value: Union[int, float]):
+        if param_name not in self.parameter_list:
+            raise ConfigError(f"Got unexpected parameter '{param_name}'")
+        self.config["Parameters"][param_name] = str(value)
 
     def write(self, cfg_path: Path):
         with open(cfg_path, "w") as output:
