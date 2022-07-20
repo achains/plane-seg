@@ -13,6 +13,6 @@ def rgb2labels(image: NDArray[(Any, Any, 3), np.int32]) -> NDArray[(Any, Any), n
     :param image: an RGB image
     :return: a NumPy array where different numbers correspond to different colors of the image
     """
-    reshaped = image.reshape([image.shape[0] * image.shape[1], image.shape[2]])
-    labeled = reshaped[0] * 256**2 + reshaped[1] * 256 + reshaped[2]
+    reshaped = image.reshape(-1, image.shape[2])
+    labeled = reshaped[:, 0] * 256 ** 2 + reshaped[:, 1] * 256 + reshaped[:, 2]
     return labeled
