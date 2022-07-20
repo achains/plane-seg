@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 from argparse import ArgumentParser
-from evops.metrics import iou, dice, precision, accuracy, recall, fScore
+from evops.metrics import iou, dice, precision, recall, fScore
 import numpy as np
 
 from . import evaluate_metrics
@@ -28,7 +28,6 @@ def main(argv):
     metrics_dict = {'iou': iou,
                     'dice': dice,
                     'precision': precision,
-                    'accuracy': accuracy,
                     'recall': recall,
                     'fScore': fScore}
 
