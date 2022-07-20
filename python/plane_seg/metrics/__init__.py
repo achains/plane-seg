@@ -1,2 +1,2 @@
-from . import get_metric
-from .get_metric import *
+from . import evaluate_metrics
+from .evaluate_metrics import *
