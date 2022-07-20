@@ -43,4 +43,4 @@ class Config:
 
     def write(self, cfg_path: Path):
         with open(cfg_path, "w") as output:
-            self.config.write(output)
+            self.config.write(output, space_around_delimiters=False)
