@@ -17,15 +17,14 @@ def color_planes(
     label_to_color = {0: np.zeros(shape=(1, 3))}
     color_set = {(0.0, 0.0, 0.0)}
 
-    for idx, label in enumerate(labels):
+    for label in np.unique(labels):
         if label not in label_to_color:
             col = np.random.uniform(0, 1, size=(1, 3))
             while tuple(col[0]) in color_set:
                 col = np.random.uniform(0, 1, size=(1, 3))
             label_to_color[label] = col
             color_set.add(tuple(col[0]))
-
-        colors[idx] = label_to_color[label]
+        colors[labels == label] = label_to_color[label]
 
     colored_pcd.colors = o3d.utility.Vector3dVector(colors)
 
