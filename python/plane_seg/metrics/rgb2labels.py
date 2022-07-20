@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 from nptyping import NDArray, Int
 
+__all__ = ["rgb2labels"]
+
 
 def rgb2labels(image: Image.Image) -> NDArray[(Any, Any), Int]:
     assert (image.mode == 'RGB'), "not an RGB image"
