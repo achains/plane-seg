@@ -10,12 +10,12 @@ def color_planes(
 
     colored_pcd = o3d.geometry.PointCloud()
     colored_pcd.points = pcd.points
-    colored_pcd.paint_uniform_color([0., 0., 0.])
+    colored_pcd.paint_uniform_color([0.0, 0.0, 0.0])
 
     colors = np.array(colored_pcd.colors)
 
     label_to_color = {0: np.zeros(shape=(1, 3))}
-    color_set = {(0., 0., 0.)}
+    color_set = {(0.0, 0.0, 0.0)}
 
     for idx, label in enumerate(labels):
         if label not in label_to_color:
