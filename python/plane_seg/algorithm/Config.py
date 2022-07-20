@@ -27,7 +27,9 @@ class Config:
         if cfg.sections() != ["Parameters"]:
             raise ConfigError(f".ini should contain only 'Parameters' section")
 
-        if sorted(cfg["Parameters"]) != sorted(parameter_list):
+        if sorted(cfg["Parameters"]) != sorted(
+            map(lambda x: x.lower(), parameter_list)
+        ):
             raise ConfigError(
                 f"Expected parameters: {sorted(parameter_list)}, got {sorted(cfg['Parameters'])}"
             )
