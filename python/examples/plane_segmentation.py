@@ -1,7 +1,9 @@
 from python.plane_seg.algorithm import DDPFF
+from python.plane_seg.visualization import color_planes
 from pathlib import Path
 
 import sys
+import open3d as o3d
 
 
 def main(argv):
@@ -13,7 +15,10 @@ def main(argv):
     )
 
     labels = algorithm.run()
-    print(labels)
+    pcd = o3d.io.read_point_cloud("data/0.ply")
+    colored_pcd = color_planes(pcd, labels)
+
+    o3d.visualization.draw_geometries([colored_pcd])
 
 
 if __name__ == "__main__":
