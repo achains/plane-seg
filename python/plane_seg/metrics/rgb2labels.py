@@ -1,7 +1,7 @@
 from typing import Any
+from nptyping import NDArray
 
 import numpy as np
-from nptyping import NDArray
 
 __all__ = ["rgb2labels"]
 

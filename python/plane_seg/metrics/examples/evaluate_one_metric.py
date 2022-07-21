@@ -1,10 +1,9 @@
-import sys
 from pathlib import Path
-
 from argparse import ArgumentParser
-import numpy as np
-
 from python.plane_seg.metrics import evaluate_metric
+
+import sys
+import numpy as np
 
 
 def main(argv):

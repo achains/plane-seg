@@ -1,12 +1,9 @@
-from typing import Union, Any, Callable, AnyStr, Dict
+from typing import AnyStr, Dict
 from pathlib import Path
+from evops.metrics import *
+from . import rgb2labels
 
 import cv2
-import numpy as np
-from nptyping import NDArray
-from evops.metrics import *
-
-from . import rgb2labels
 
 __all__ = ["evaluate_metric", "evaluate_all_metrics"]
 
