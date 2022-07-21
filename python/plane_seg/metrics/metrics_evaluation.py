@@ -20,7 +20,7 @@ def evaluate_metric(
 
     :param prediction: an RGB image or a 2D NumPy array
     :param ground_truth_path: path to an RGB image or a 2D NumPy array, the same size as predictions
-    :param metric_name: name of an EVOPS metric: can be one of: {iou, dice, precision-iou, recall-iou, fScore-iou, mean-iou, mean-dice}
+    :param metric_name: name of an EVOPS metric: may be one of: {iou, dice, precision-iou, recall-iou, fScore-iou, mean-iou, mean-dice}
     :param print_to_console: prints to console if true
     :param output_file: appends output to the file if specified
     :return: the value of the metric

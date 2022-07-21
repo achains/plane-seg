@@ -9,11 +9,11 @@ import numpy as np
 def main(argv):
     parser = ArgumentParser()
     parser.add_argument(
-        "--print_to_console",
+        "--print-to-console",
         help="optional, true by default, can be one of: true, false",
     )
     parser.add_argument(
-        "--output_file",
+        "--output-file",
         type=Path,
         help="optional, path to an output file.\nif specified, metric value is appended there",
     )
