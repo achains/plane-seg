@@ -1,6 +1,6 @@
-from pathlib import Path
 from argparse import ArgumentParser
-from python.plane_seg.metrics import evaluate_metric
+from pathlib import Path
+from python.plane_seg.metrics import evaluate_all_metrics
 
 import sys
 import numpy as np
@@ -8,9 +8,6 @@ import numpy as np
 
 def main(argv):
     parser = ArgumentParser()
-    parser.add_argument(
-        "--metric-name", type=str, help="can be one of: precision, recall, mean"
-    )
     parser.add_argument(
         "--print-to-console",
         help="optional, true by default, can be one of: true, false",
@@ -23,16 +20,11 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    if not args.metric_name:
-        parser.print_help()
-        return
+    predicted_labels = np.load("data/metrics_example_perdictions.npy")
 
-    predicted_labels = np.load("data/labels.npy")
-
-    evaluate_metric(
+    evaluate_all_metrics(
         predicted_labels,
-        Path("data/0000.png"),
-        args.metric_name,
+        Path("data/metrics_example_ground_truth.png"),
         print_to_console=(args.print_to_console != "false"),
         output_file=args.output_file,
     )
