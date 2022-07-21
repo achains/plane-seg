@@ -97,11 +97,11 @@ def evaluate_all_metrics(prediction: NDArray[(Any, Any), np.int32],
     }
 
     if print_to_console:
-        for metric, value in all_metrics_values:
+        for metric, value in all_metrics_values.items():
             print(f'{metric:13} {value}')
     if output_file is not None:
         with open(output_file, 'a') as fout:
-            for metric, value in all_metrics_values:
+            for metric, value in all_metrics_values.items():
                 fout.write(f'{metric:13} {value}\n')
             fout.write('\n')
 

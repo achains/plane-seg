@@ -15,10 +15,6 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    if not args.predicted_labels or not args.ground_truth or not args.metric_name:
-        parser.print_help()
-        return
-
     predicted_labels = np.load('data/labels.npy')
 
     evaluate_all_metrics(predicted_labels,
