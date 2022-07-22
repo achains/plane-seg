@@ -20,10 +20,10 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    predicted_labels = np.load("data/metrics_example_perdictions.npy")
+    predictions = np.load("data/metrics_example_perdictions.npy")
 
     evaluate_all_metrics(
-        predicted_labels,
+        predictions,
         Path("data/metrics_example_ground_truth.png"),
         print_to_console=(args.print_to_console != "false"),
         output_file=args.output_file,
