@@ -61,13 +61,21 @@ class DDPFF(Algorithm.Algorithm):
 
     def _evaluate_algorithm(self, input_parameters: Collection[str]) -> Path:
         client = docker.from_env()
-        input_mount = Mount(target="/app/build/input", source=str(self._alg_input_dir.absolute()), type='bind')
-        output_mount = Mount(target="/app/build/output", source=str(self._alg_output_dir.absolute()), type='bind')
+        input_mount = Mount(
+            target="/app/build/input",
+            source=str(self._alg_input_dir.absolute()),
+            type="bind",
+        )
+        output_mount = Mount(
+            target="/app/build/output",
+            source=str(self._alg_output_dir.absolute()),
+            type="bind",
+        )
 
         client.containers.run(
             self.container_name,
-            ' '.join(input_parameters),
-            mounts=[input_mount, output_mount]
+            " ".join(input_parameters),
+            mounts=[input_mount, output_mount],
         )
 
         return self._alg_output_dir / self._alg_artifact_name
