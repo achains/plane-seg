@@ -1,4 +1,4 @@
-from typing import AnyStr, Dict, Collection
+from typing import AnyStr, Dict, Collection, Tuple, Set, List, Union
 from pathlib import Path
 from evops.metrics import *
 from . import rgb2labels
@@ -11,7 +11,7 @@ __all__ = ["evaluate_metrics"]
 def evaluate_metrics(
     prediction: NDArray[(Any, Any), np.int32],
     ground_truth_path: Path,
-    metric_names: Collection[AnyStr] = (
+    metric_names: Union[Tuple[AnyStr], List[AnyStr], Set[AnyStr]] = (
         "iou",
         "dice",
         "precision-iou",
@@ -24,7 +24,7 @@ def evaluate_metrics(
     output_file: Path = None,
 ) -> Dict[AnyStr, np.float64]:
     """
-    Evaluates an EVOPS metric given predictions and ground truth
+    Evaluates EVOPS metrics given predictions and ground truth
 
     :param prediction: an RGB image or a 2D NumPy array
     :param ground_truth_path: path to an RGB image or a 2D NumPy array, the same size as predictions
@@ -45,26 +45,29 @@ def evaluate_metrics(
 
     metric_values = {}
 
-    if "iou" in metric_names:
-        metric_values["iou"] = iou(prediction, ground_truth)
-    if "dice" in metric_names:
-        metric_values["dice"] = dice(prediction, ground_truth)
-    if "precision-iou" in metric_names:
-        metric_values["precision-iou"] = precision(prediction, ground_truth, "iou")
-    if "recall-iou" in metric_names:
-        metric_values["recall-iou"] = recall(prediction, ground_truth, "iou")
-    if "fScore-iou" in metric_names:
-        metric_values["fScore-iou"] = fScore(prediction, ground_truth, "iou")
-    if "mean-iou" in metric_names:
-        metric_values["mean-iou"] = mean(prediction, ground_truth, iou)
-    if "mean-dice" in metric_names:
-        metric_values["mean-dice"] = mean(prediction, ground_truth, dice)
+    for metric_name in metric_names:
+        if "iou" == metric_name:
+            metric_values["iou"] = iou(prediction, ground_truth)
+        if "dice" == metric_name:
+            metric_values["dice"] = dice(prediction, ground_truth)
+        if "precision-iou" == metric_name:
+            metric_values["precision-iou"] = precision(prediction, ground_truth, "iou")
+        if "recall-iou" == metric_name:
+            metric_values["recall-iou"] = recall(prediction, ground_truth, "iou")
+        if "fScore-iou" == metric_name:
+            metric_values["fScore-iou"] = fScore(prediction, ground_truth, "iou")
+        if "mean-iou" == metric_name:
+            metric_values["mean-iou"] = mean(prediction, ground_truth, iou)
+        if "mean-dice" == metric_name:
+            metric_values["mean-dice"] = mean(prediction, ground_truth, dice)
+        else:
+            raise ValueError(f"Invalid metric name {metric_name}.")
 
     if print_to_console:
         for metric, value in metric_values.items():
             print(f"{metric:13} {value}")
     if output_file is not None:
-        with open(output_file, "a") as fout:
+        with open(output_file, "w") as fout:
             for metric, value in metric_values.items():
                 fout.write(f"{metric:13} {value}\n")
             fout.write("\n")
