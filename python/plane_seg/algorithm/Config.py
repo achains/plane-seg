@@ -23,13 +23,12 @@ class Config:
         cfg_path: Path, parameter_list: Sequence[str]
     ) -> configparser.ConfigParser():
         cfg = configparser.ConfigParser()
+        cfg.optionxform = str
         cfg.read(cfg_path)
         if cfg.sections() != ["Parameters"]:
             raise ConfigError(f".ini should contain only 'Parameters' section")
 
-        if sorted(cfg["Parameters"]) != sorted(
-            map(lambda x: x.lower(), parameter_list)
-        ):
+        if sorted(cfg["Parameters"]) != sorted(parameter_list):
             raise ConfigError(
                 f"Expected parameters: {sorted(parameter_list)}, got {sorted(cfg['Parameters'])}"
             )
@@ -41,6 +40,8 @@ class Config:
             raise ConfigError(f"Got unexpected parameter '{param_name}'")
         self.config["Parameters"][param_name] = str(value)
 
-    def write(self, cfg_path: Path):
+    def write(self, cfg_path: Path) -> Path:
         with open(cfg_path, "w") as output:
             self.config.write(output, space_around_delimiters=False)
+
+        return cfg_path
