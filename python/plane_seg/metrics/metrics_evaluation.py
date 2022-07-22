@@ -1,4 +1,4 @@
-from typing import AnyStr, Dict, Collection, Tuple, Set, List, Union
+from typing import AnyStr, Dict, Tuple
 from pathlib import Path
 from evops.metrics import *
 from . import rgb2labels
@@ -11,7 +11,7 @@ __all__ = ["evaluate_metrics"]
 def evaluate_metrics(
     prediction: NDArray[(Any, Any), np.int32],
     ground_truth_path: Path,
-    metric_names: Union[Tuple[AnyStr], List[AnyStr], Set[AnyStr]] = (
+    metric_names: Tuple[AnyStr] = (
         "iou",
         "dice",
         "precision-iou",
