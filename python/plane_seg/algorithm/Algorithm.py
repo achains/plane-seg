@@ -1,9 +1,11 @@
 from pathlib import Path
 from .Config import Config
 
+from shutil import rmtree
+
 import numpy as np
-import subprocess
 import abc
+import os
 
 __all__ = ["Algorithm"]
 
@@ -40,11 +42,21 @@ class Algorithm(abc.ABC):
 
     def run(self) -> np.ndarray:
         self.load_config()
-        input_path = self._preprocess_input()
 
-        output_path = self._evaluate_algorithm(input_path)
-        labels = self._output_to_labels(output_path)
+        if self._alg_input_dir.exists():
+            rmtree(self._alg_input_dir)
+        os.mkdir(self._alg_input_dir)
 
-        self._clear_artifacts()
+        parameter_list = self._preprocess_input()
+
+        if os.path.exists(self._alg_output_dir):
+            rmtree(self._alg_output_dir)
+        os.mkdir(self._alg_output_dir)
+
+        try:
+            output_path = self._evaluate_algorithm(parameter_list)
+            labels = self._output_to_labels(output_path)
+        finally:
+            self._clear_artifacts()
 
         return labels
