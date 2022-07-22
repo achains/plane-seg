@@ -20,7 +20,7 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    predictions = np.load("data/metrics_example_perdictions.npy")
+    predictions = np.load("data/metrics_example_predictions.npy")
 
     evaluate_metrics(
         predictions,
