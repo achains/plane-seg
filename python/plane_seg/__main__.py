@@ -1,7 +1,7 @@
 import numpy as np
 
 from algorithm.DDPFF import DDPFF
-from metrics import evaluate_metric, evaluate_all_metrics
+from metrics import evaluate_metrics
 from pathlib import Path
 from typing import AnyStr
 
@@ -40,7 +40,7 @@ def main(argv):
 
     # Evaluating metrics if needed
     if args.eval_metric is not None:
-        evaluated_metric = evaluate_metric(
+        evaluated_metric = evaluate_metrics(
             labels,
             args.ground_truth,
             args.eval_metric,

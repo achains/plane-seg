@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from pathlib import Path
-from python.plane_seg.metrics import evaluate_all_metrics
+from python.plane_seg.metrics import evaluate_metrics
 
 import sys
 import numpy as np
@@ -22,9 +22,10 @@ def main(argv):
 
     predictions = np.load("data/metrics_example_perdictions.npy")
 
-    evaluate_all_metrics(
+    evaluate_metrics(
         predictions,
         Path("data/metrics_example_ground_truth.png"),
+        metric_names=("precision-iou", "mean-dice"),
         print_to_console=(args.print_to_console != "false"),
         output_file=args.output_file,
     )
