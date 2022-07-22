@@ -48,7 +48,7 @@ def main(argv):
             args.metrics_output_to_file,
         )
     elif args.eval_all_metrics != "false":
-        evaluated_metrics = evaluate_all_metrics(
+        evaluated_metrics = evaluate_metrics(
             labels,
             args.ground_truth,
             args.metrics_print_to_console,
