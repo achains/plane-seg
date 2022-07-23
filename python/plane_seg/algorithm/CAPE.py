@@ -39,7 +39,7 @@ class CAPE(Algorithm.Algorithm):
             "regionGrowingCellsActivatedThresholdParam",
             "regionPlanarFittingPlanarityScoreThresholdParam",
             "cylinderDetectionCellsActivatedThreshold",
-            "refinementMultiplierParam"
+            "refinementMultiplierParam",
         )
 
     # getting parameters for running algo
@@ -47,8 +47,7 @@ class CAPE(Algorithm.Algorithm):
         container_input_dir_name = str(self.__convert_point_cloud_to_depth_image())
         container_cfg_name = str(self._cfg.write(self._alg_input_dir / "params.ini"))
 
-        copy2(str(self.pcd_path / "calib_params.xml"),
-              str(container_input_dir_name))
+        copy2(str(self.pcd_path / "calib_params.xml"), str(container_input_dir_name))
 
         return [container_input_dir_name, container_cfg_name]
 
@@ -88,7 +87,7 @@ class CAPE(Algorithm.Algorithm):
         return self._alg_output_dir / self._alg_artifact_name
 
     def _output_to_labels(self, output_path: Path) -> np.ndarray:
-        labels_table = np.genfromtxt(output_path, delimiter=',').astype(np.uint8)
+        labels_table = np.genfromtxt(output_path, delimiter=",").astype(np.uint8)
         labels = labels_table.reshape(labels_table.size)
         return labels
 
