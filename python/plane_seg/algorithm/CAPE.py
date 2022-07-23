@@ -1,5 +1,5 @@
 from pathlib import Path
-from shutil import rmtree
+from shutil import rmtree, copy2
 from docker.types import Mount
 
 from typing import Collection
@@ -20,8 +20,8 @@ class CAPE(Algorithm.Algorithm):
         self.cfg_path = cfg_path
         self.pcd_path = pcd_path
         self._cfg = None
-        self._alg_input_dir = Path("cape_input")
-        self._alg_output_dir = Path("cape_output")
+        self._alg_input_dir = Path("input")
+        self._alg_output_dir = Path("output")
         self._alg_artifact_name = Path("labels_0.csv")
         self._parameter_list = (
             "depthSigmaCoeff",
@@ -44,13 +44,16 @@ class CAPE(Algorithm.Algorithm):
 
     # getting parameters for running algo
     def _preprocess_input(self) -> Collection[str]:
-        pcd_name = self.__convert_point_cloud_to_depth_image().name
-        cfg_name = self._cfg.write(self._alg_input_dir / "params.ini").name
+        container_input_dir_name = str(self.__convert_point_cloud_to_depth_image())
+        container_cfg_name = str(self._cfg.write(self._alg_input_dir / "params.ini"))
 
-        return [pcd_name, cfg_name]
+        copy2(str(self.pcd_path / "calib_params.xml"),
+              str(container_input_dir_name))
+
+        return [container_input_dir_name, container_cfg_name]
 
     def __convert_point_cloud_to_depth_image(self) -> Path:
-        pcd = o3d.io.read_point_cloud(str(self.pcd_path))
+        pcd = o3d.io.read_point_cloud(str(self.pcd_path / "0.ply"))
         pcd.paint_uniform_color([0, 0, 0])
 
         xyz_load = np.asarray(pcd.points)
@@ -61,7 +64,7 @@ class CAPE(Algorithm.Algorithm):
         img_path = str(self._alg_input_dir / "depth_0.png")
         o3d.io.write_image(img_path, img)
 
-        return Path(img_path)
+        return self._alg_input_dir
 
     def _evaluate_algorithm(self, input_parameters: Collection[str]) -> Path:
         client = docker.from_env()
