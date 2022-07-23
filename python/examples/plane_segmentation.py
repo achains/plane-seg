@@ -7,9 +7,9 @@ import open3d as o3d
 
 
 def main(argv):
-    executable_path = Path(argv[0])
+    container_name = argv[0]
     algorithm = DDPFF(
-        alg_path=executable_path,
+        container_name=container_name,
         cfg_path=Path("data/ddpff.ini"),
         pcd_path=Path("data/0.ply"),
     )

@@ -1,11 +1,12 @@
 from pathlib import Path
 from shutil import rmtree
+from docker.types import Mount
+
+from typing import Collection
 
 from . import Algorithm
-from . import Config
 
-import subprocess
-import os
+import docker
 
 import numpy as np
 import open3d as o3d
@@ -14,10 +15,11 @@ __all__ = ["DDPFF"]
 
 
 class DDPFF(Algorithm.Algorithm):
-    def __init__(self, alg_path: Path, cfg_path: Path, pcd_path: Path):
-        self.alg_path = alg_path
+    def __init__(self, container_name: str, cfg_path: Path, pcd_path: Path):
+        self.container_name = container_name
         self.cfg_path = cfg_path
         self.pcd_path = pcd_path
+        self._cfg = None
         self._alg_input_dir = Path("ddpff_input")
         self._alg_output_dir = Path("ddpff_output")
         self._alg_artifact_name = Path("planes.txt")
@@ -42,31 +44,40 @@ class DDPFF(Algorithm.Algorithm):
             "floodFill.c_range",
         )
 
-    def _preprocess_input(self) -> Path:
+    def _preprocess_input(self) -> Collection[str]:
+        pcd_name = self.__preprocess_point_cloud().name
+        cfg_name = self._cfg.write(self._alg_input_dir / "ddpff.ini").name
+
+        return [pcd_name, cfg_name]
+
+    def __preprocess_point_cloud(self) -> Path:
         pcd = o3d.io.read_point_cloud(str(self.pcd_path))
         pcd.paint_uniform_color([0, 0, 0])
 
-        if os.path.exists(self._alg_input_dir):
-            rmtree(self._alg_input_dir)
-        os.mkdir(self._alg_input_dir)
-
         pcd_path = str(self._alg_input_dir / self.pcd_path.stem) + ".ply"
         o3d.io.write_point_cloud(pcd_path, pcd, write_ascii=True)
+
         return Path(pcd_path)
 
-    def _evaluate_algorithm(self, input_path: Path) -> Path:
-        if os.path.exists(self._alg_output_dir):
-            rmtree(self._alg_output_dir)
-        os.mkdir(self._alg_output_dir)
-
-        subprocess.run(
-            [
-                self.alg_path,
-                input_path,
-                self.cfg_path,
-                self._alg_output_dir / self._alg_artifact_name,
-            ]
+    def _evaluate_algorithm(self, input_parameters: Collection[str]) -> Path:
+        client = docker.from_env()
+        input_mount = Mount(
+            target="/app/build/input",
+            source=str(self._alg_input_dir.absolute()),
+            type="bind",
         )
+        output_mount = Mount(
+            target="/app/build/output",
+            source=str(self._alg_output_dir.absolute()),
+            type="bind",
+        )
+
+        client.containers.run(
+            self.container_name,
+            " ".join(input_parameters),
+            mounts=[input_mount, output_mount],
+        )
+
         return self._alg_output_dir / self._alg_artifact_name
 
     def _output_to_labels(self, output_path: Path) -> np.ndarray:
