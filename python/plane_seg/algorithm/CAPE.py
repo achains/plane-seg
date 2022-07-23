@@ -15,7 +15,9 @@ __all__ = ["CAPE"]
 
 
 class CAPE(Algorithm.Algorithm):
-    def __init__(self, container_name: str, cfg_path: Path, pcd_path: Path, calib_path: Path):
+    def __init__(
+        self, container_name: str, cfg_path: Path, pcd_path: Path, calib_path: Path
+    ):
         self.container_name = container_name
         self.cfg_path = cfg_path
         self.pcd_path = pcd_path
