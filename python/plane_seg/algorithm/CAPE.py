@@ -15,10 +15,11 @@ __all__ = ["CAPE"]
 
 
 class CAPE(Algorithm.Algorithm):
-    def __init__(self, container_name: str, cfg_path: Path, pcd_path: Path):
+    def __init__(self, container_name: str, cfg_path: Path, pcd_path: Path, calib_path: Path):
         self.container_name = container_name
         self.cfg_path = cfg_path
         self.pcd_path = pcd_path
+        self.calib_path = calib_path
         self._cfg = None
         self._alg_input_dir = Path("input")
         self._alg_output_dir = Path("output")
@@ -47,12 +48,12 @@ class CAPE(Algorithm.Algorithm):
         container_input_dir_name = str(self.__convert_point_cloud_to_depth_image())
         container_cfg_name = str(self._cfg.write(self._alg_input_dir / "params.ini"))
 
-        copy2(str(self.pcd_path / "calib_params.xml"), str(container_input_dir_name))
+        copy2(str(self.calib_path), str(container_input_dir_name))
 
         return [container_input_dir_name, container_cfg_name]
 
     def __convert_point_cloud_to_depth_image(self) -> Path:
-        pcd = o3d.io.read_point_cloud(str(self.pcd_path / "0.ply"))
+        pcd = o3d.io.read_point_cloud(str(self.pcd_path))
         pcd.paint_uniform_color([0, 0, 0])
 
         xyz_load = np.asarray(pcd.points)
