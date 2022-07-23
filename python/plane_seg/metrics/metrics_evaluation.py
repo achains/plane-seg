@@ -48,17 +48,17 @@ def evaluate_metrics(
     for metric_name in metric_names:
         if "iou" == metric_name:
             metric_values["iou"] = iou(prediction, ground_truth)
-        if "dice" == metric_name:
+        elif "dice" == metric_name:
             metric_values["dice"] = dice(prediction, ground_truth)
-        if "precision-iou" == metric_name:
+        elif "precision-iou" == metric_name:
             metric_values["precision-iou"] = precision(prediction, ground_truth, "iou")
-        if "recall-iou" == metric_name:
+        elif "recall-iou" == metric_name:
             metric_values["recall-iou"] = recall(prediction, ground_truth, "iou")
-        if "fScore-iou" == metric_name:
+        elif "fScore-iou" == metric_name:
             metric_values["fScore-iou"] = fScore(prediction, ground_truth, "iou")
-        if "mean-iou" == metric_name:
+        elif "mean-iou" == metric_name:
             metric_values["mean-iou"] = mean(prediction, ground_truth, iou)
-        if "mean-dice" == metric_name:
+        elif "mean-dice" == metric_name:
             metric_values["mean-dice"] = mean(prediction, ground_truth, dice)
         else:
             raise ValueError(f"Invalid metric name {metric_name}.")
