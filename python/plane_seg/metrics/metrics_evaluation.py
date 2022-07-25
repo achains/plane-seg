@@ -68,7 +68,7 @@ def evaluate_metrics(
                     raise ValueError(f"Invalid multivalue threshold")
             else:
                 threshold = np.float64(0.8)
-            multivalue_result = multi_value(prediction, ground_truth)
+            multivalue_result = multi_value(prediction, ground_truth, threshold)
 
             metric_values["under_segmented"] = multivalue_result["under_segmented"]
             metric_values["over_segmented"] = multivalue_result["over_segmented"]
