@@ -19,6 +19,7 @@ def evaluate_metrics(
         "fScore-iou",
         "mean-iou",
         "mean-dice",
+        "multivalue-0.8"
     ),
     print_to_console: bool = True,
     output_file: Path = None,
@@ -28,7 +29,7 @@ def evaluate_metrics(
 
     :param prediction: an RGB image or a 2D NumPy array
     :param ground_truth_path: path to an RGB image or a 2D NumPy array, the same size as predictions
-    :param metric_names: names of EVOPS metrics: any subset of: {iou, dice, precision-iou, recall-iou, fScore-iou, mean-iou, mean-dice}. All by default
+    :param metric_names: names of EVOPS metrics: any subset of: {iou, dice, precision-iou, recall-iou, fScore-iou, mean-iou, mean-dice, multivalue-0.X}. All by default
     :param print_to_console: prints to console if true
     :param output_file: appends output to the file if specified
     :return: the value of the metric
@@ -46,20 +47,28 @@ def evaluate_metrics(
     metric_values = {}
 
     for metric_name in metric_names:
-        if "iou" == metric_name:
-            metric_values["iou"] = iou(prediction, ground_truth)
-        elif "dice" == metric_name:
-            metric_values["dice"] = dice(prediction, ground_truth)
-        elif "precision-iou" == metric_name:
-            metric_values["precision-iou"] = precision(prediction, ground_truth, "iou")
-        elif "recall-iou" == metric_name:
-            metric_values["recall-iou"] = recall(prediction, ground_truth, "iou")
-        elif "fScore-iou" == metric_name:
-            metric_values["fScore-iou"] = fScore(prediction, ground_truth, "iou")
-        elif "mean-iou" == metric_name:
-            metric_values["mean-iou"] = mean(prediction, ground_truth, iou)
-        elif "mean-dice" == metric_name:
-            metric_values["mean-dice"] = mean(prediction, ground_truth, dice)
+        if metric_name == "iou":
+            metric_values[metric_name] = iou(prediction, ground_truth)
+        elif metric_name == "dice":
+            metric_values[metric_name] = dice(prediction, ground_truth)
+        elif metric_name == "precision-iou":
+            metric_values[metric_name] = precision(prediction, ground_truth, "iou")
+        elif metric_name == "recall-iou":
+            metric_values[metric_name] = recall(prediction, ground_truth, "iou")
+        elif metric_name == "fScore-iou":
+            metric_values[metric_name] = fScore(prediction, ground_truth, "iou")
+        elif metric_name == "mean-iou":
+            metric_values[metric_name] = mean(prediction, ground_truth, iou)
+        elif metric_name == "mean-dice":
+            metric_values[metric_name] = mean(prediction, ground_truth, dice)
+        elif metric_name.startswith("multivalue"):
+            if len(metric_name > 11):
+                threshold = np.float64(metric_name[11:])
+                if not (0 <= threshold <= 1):
+                    raise ValueError(f"Invalid multivalue threshold")
+            else:
+                threshold = np.float64(0.8)
+            metric_values[metric_name] = multi_value(prediction, ground_truth, threshold)
         else:
             raise ValueError(f"Invalid metric name {metric_name}.")
 
