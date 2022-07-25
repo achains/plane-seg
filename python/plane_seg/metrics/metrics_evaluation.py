@@ -61,8 +61,10 @@ def evaluate_metrics(
             metric_values[metric_name] = mean(prediction, ground_truth, iou)
         elif metric_name == "mean-dice":
             metric_values[metric_name] = mean(prediction, ground_truth, dice)
-        elif metric_name.startswith("multivalue"):
-            if len(metric_name > 11):
+        elif metric_name == "multivalue":
+            metric_values[metric_name] == multi_value(prediction, ground_truth)
+        elif metric_name.startswith("multivalue-"):
+            if len(metric_name)> 11:
                 threshold = np.float64(metric_name[11:])
                 if not (0 <= threshold <= 1):
                     raise ValueError(f"Invalid multivalue threshold")
