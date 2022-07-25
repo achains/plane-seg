@@ -19,7 +19,7 @@ def evaluate_metrics(
         "fScore-iou",
         "mean-iou",
         "mean-dice",
-        "multivalue-0.8"
+        "multivalue-0.8"  # Here user can specify any float between 0 and 1 as a threshold
     ),
     print_to_console: bool = True,
     output_file: Path = None,
