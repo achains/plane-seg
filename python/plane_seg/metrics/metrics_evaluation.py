@@ -61,8 +61,6 @@ def evaluate_metrics(
             metric_values[metric_name] = mean(prediction, ground_truth, iou)
         elif metric_name == "mean-dice":
             metric_values[metric_name] = mean(prediction, ground_truth, dice)
-        elif metric_name == "multivalue":
-            metric_values[metric_name] == multi_value(prediction, ground_truth)
         elif metric_name.startswith("multivalue-"):
             if len(metric_name) > 11:
                 threshold = np.float64(metric_name[11:])
@@ -70,19 +68,22 @@ def evaluate_metrics(
                     raise ValueError(f"Invalid multivalue threshold")
             else:
                 threshold = np.float64(0.8)
-            metric_values[metric_name] = multi_value(
-                prediction, ground_truth, threshold
-            )
+            multivalue_result = multi_value(prediction, ground_truth)
+
+            metric_values["under_segmented"] = multivalue_result["under_segmented"]
+            metric_values["over_segmented"] = multivalue_result["over_segmented"]
+            metric_values["missed"] = multivalue_result["missed"]
+            metric_values["noise"] = multivalue_result["noise"]
         else:
             raise ValueError(f"Invalid metric name {metric_name}.")
 
     if print_to_console:
         for metric, value in metric_values.items():
-            print(f"{metric:13} {value}")
+            print(f"{metric:15} {value}")
     if output_file is not None:
         with open(output_file, "w") as fout:
             for metric, value in metric_values.items():
-                fout.write(f"{metric:13} {value}\n")
+                fout.write(f"{metric:15} {value}\n")
             fout.write("\n")
 
     return metric_values
