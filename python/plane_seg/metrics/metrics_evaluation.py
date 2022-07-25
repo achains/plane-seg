@@ -19,7 +19,7 @@ def evaluate_metrics(
         "fScore-iou",
         "mean-iou",
         "mean-dice",
-        "multivalue-0.8"  # Here user can specify any float between 0 and 1 as a threshold
+        "multivalue-0.8",  # Here user can specify any float between 0 and 1 as a threshold
     ),
     print_to_console: bool = True,
     output_file: Path = None,
@@ -68,7 +68,9 @@ def evaluate_metrics(
                     raise ValueError(f"Invalid multivalue threshold")
             else:
                 threshold = np.float64(0.8)
-            metric_values[metric_name] = multi_value(prediction, ground_truth, threshold)
+            metric_values[metric_name] = multi_value(
+                prediction, ground_truth, threshold
+            )
         else:
             raise ValueError(f"Invalid metric name {metric_name}.")
 
