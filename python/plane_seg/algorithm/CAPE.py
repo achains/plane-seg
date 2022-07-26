@@ -26,6 +26,7 @@ class CAPE(Algorithm.Algorithm):
         self._alg_input_dir = Path("input")
         self._alg_output_dir = Path("output")
         self._alg_artifact_name = Path("labels_0.csv")
+        self.input_is_depth = pcd_path.suffix == ".png"
         self._parameter_list = (
             "depthSigmaCoeff",
             "depthSigmaMargin",
@@ -55,16 +56,19 @@ class CAPE(Algorithm.Algorithm):
         return [container_input_dir_name, container_cfg_name]
 
     def __convert_point_cloud_to_depth_image(self) -> Path:
-        pcd = o3d.io.read_point_cloud(str(self.pcd_path))
-        pcd.paint_uniform_color([0, 0, 0])
-
-        xyz_load = np.asarray(pcd.points)
-        z = xyz_load[:, 2].reshape(480, 640)  # TODO: get rid of magic numbers
-        d = (z * 1000).astype(np.uint32)
-        img = o3d.geometry.Image(d.astype(np.uint16))
-
         img_path = str(self._alg_input_dir / "depth_0.png")
-        o3d.io.write_image(img_path, img)
+        if self.input_is_depth:
+            copy2(str(self.pcd_path), img_path)
+        else:
+            pcd = o3d.io.read_point_cloud(str(self.pcd_path))
+            pcd.paint_uniform_color([0, 0, 0])
+
+            xyz_load = np.asarray(pcd.points)
+            z = xyz_load[:, 2].reshape(480, 640)  # TODO: get rid of magic numbers
+            d = (z * 1000).astype(np.uint32)
+            img = o3d.geometry.Image(d.astype(np.uint16))
+
+            o3d.io.write_image(img_path, img)
 
         return self._alg_input_dir
 
