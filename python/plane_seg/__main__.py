@@ -33,9 +33,14 @@ def main(argv):
 
     args = parser.parse_args(argv)
 
-    if args.algorithm.startswith('cape'):
-        algorithm = CAPE(args.algorithm, args.config, args.data, args.data.parent / "calib_params.xml")
-    elif args.algorithm.startswith('ddpff'):
+    if args.algorithm.startswith("cape"):
+        algorithm = CAPE(
+            args.algorithm,
+            args.config,
+            args.data,
+            args.data.parent / "calib_params.xml",
+        )
+    elif args.algorithm.startswith("ddpff"):
         algorithm = DDPFF(args.algorithm, args.config, args.data)
     else:
         raise ValueError("invalid algorithm specified:", args.algorithm)
@@ -56,7 +61,7 @@ def main(argv):
         evaluated_metrics = evaluate_metrics(
             labels,
             args.ground_truth,
-            print_to_console=(args.metrics_print_to_console != 'false'),
+            print_to_console=(args.metrics_print_to_console != "false"),
             output_file=args.metrics_output_to_file,
         )
 
